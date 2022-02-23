@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Ahorcado</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="/styles.css" rel="stylesheet" />
+        <script
+            defer
+            src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+        <script src="app.js"></script>
+    </head>
+    <body
+        x-data="app"
+        class="mx-auto flex h-screen w-full max-w-screen-md flex-col justify-between overflow-hidden bg-gradient-to-b from-slate-700 to-slate-900 px-4 py-12"
+    >
+        <header class="text-center">
+            <h1 class="text-4xl font-light uppercase text-cyan-300">
+                Juego del Ahorcado
+            </h1>
+        </header>
+
+        <main class="flex h-full items-center justify-center">
+            <button
+                type="button"
+                x-cloak
+                x-show="!started"
+                @click="start()"
+                class="button"
+                :class="loading ? 'pointer-events-none cursor-not-allowed animate-pulse' : ''"
+            >
+                <span x-cloak x-show="!loading">Comenzar</span>
+                <span
+                    x-cloak
+                    x-show="loading"
+                    class="flex w-full items-center justify-between"
+                >
+                    <svg
+                        class="-ml-1 mr-3 h-5 w-5 animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        ></circle>
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                    </svg>
+                    Cargando...
+                </span>
+            </button>
+
+            <div
+                id="game"
+                x-cloak
+                x-show="started"
+                class="flex h-full flex-col"
+            >
+                <div
+                    x-show="lives > 0 && checkWord.length > 0"
+                    class="flex h-full flex-col items-center justify-around"
+                >
+                    <div
+                        id="word-grid"
+                        class="flex flex-wrap space-x-4 font-mono text-4xl text-white"
+                    >
+                        <template x-for="letter in word">
+                            <div
+                                class="h-12 w-10 px-2 py-1 text-center"
+                                :class="letter != ' ' && 'border-b-4'"
+                            >
+                                <div
+                                    x-cloak
+                                    x-show="keysPressed.includes(letter)"
+                                    x-text="letter"
+                                ></div>
+                            </div>
+                        </template>
+                    </div>
+                    <div id="lives" class="mt-8 text-center text-2xl">
+                        <div class="flex">
+                            <template x-for="live in lives">
+                                <span class="text-rose-600">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-6 w-6"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </span>
+                            </template>
+                        </div>
+
+                        <div class="text-white">
+                            Intentos: <span x-text="keysPressed.length"></span>
+                        </div>
+                    </div>
+
+                    <div
+                        id="letters-grid"
+                        class="flex w-2/3 flex-wrap items-center justify-center space-x-2 space-y-2 font-mono text-xl font-semibold text-white"
+                    >
+                        <template x-for="letter in alphabet">
+                            <button
+                                :disabled="keysPressed.includes(letter)"
+                                :class="keysPressed.includes(letter) && 'opacity-20 hover:!bg-white/20 hover:!border-white'"
+                                x-text="letter"
+                                @click="pressed(letter)"
+                                class="rounded border border-white bg-white/20 px-3 py-1 text-center backdrop-blur-md transition duration-200 hover:border-cyan-600 hover:bg-cyan-500"
+                            ></button>
+                        </template>
+                    </div>
+                </div>
+
+                <div
+                    x-cloak
+                    x-show="lives === 0 && checkWord.length > 0"
+                    class="text-4xl font-bold text-white"
+                >
+                    GAME OVER!
+                </div>
+
+                <div
+                    x-cloak
+                    x-show="lives > 0 && checkWord.length === 0"
+                    class="text-white"
+                >
+                    <h2 x-text="word" class="text-4xl font-bold"></h2>
+                    <p x-html="wordDefinition"></p>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
