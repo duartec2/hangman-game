@@ -7,17 +7,3 @@
         display: none !important;
     }
 }
-
-@layer utilities {
-    .neon {
-        @apply text-emerald-200;
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff,
-            0 0 40px #06b6d4, 0 0 80px #06b6d4, 0 0 90px #06b6d4,
-            0 0 100px #06b6d4, 0 0 150px #06b6d4;
-    }
-
-    .button {
-        @apply rounded border-2 border-cyan-500 bg-transparent px-8 py-1 text-lg font-semibold text-white
-                transition duration-300 ease-in-out hover:border-cyan-600 hover:bg-cyan-500;
-    }
-}
